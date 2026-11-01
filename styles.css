@@ -101,7 +101,13 @@ header {
     background-color: #444;
 }
 /* caixas - JOSÉ RUAN */
-#elevador {
+#boxs {
+  display: flex;             /* Ativa divs na horizontal */
+  justify-content: center;   
+  gap: 50px;                 /* Espaço entre as caixas */
+  
+}
+#caixas {
   width: 350px;
   padding: 20px;
   margin: 12px;
@@ -111,8 +117,8 @@ header {
   text-align: center;
 }
 
-/* 2. Estilizando a imagem para ela respeitar os limites da caixa */
-#elevador .elevadores {
+/* 2. Estilizando a imagem para ela  os limites da caixa */
+#caixas .elevadores, .sumid, .sluz {
   width: 100%;          /* A imagem ocupa toda a largura útil da caixa */
   height: 200px;        /* Altura fixa para manter um padrão */
   border-radius: 10px;  /* Arredonda os cantos da foto */
@@ -120,10 +126,10 @@ header {
 }
 
 /* 3. Estilizando o texto para destacar no fundo escuro */
-#elevador h3 {
+#caixas h3{
   color: white;       
 }
-#elevador .btn-saiba-mais{
+#caixas .btn-saiba-mais {
   display: block;
   background-color: white;
   color:black;
@@ -139,5 +145,3 @@ footer{
   text-align: center;
   padding: 15px 0;
 }
-
-
