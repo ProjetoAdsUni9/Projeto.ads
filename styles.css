@@ -137,6 +137,18 @@ header {
   padding: 12px;
   border-radius: 10px;
 }
+/* ALISSON GBR */
+.elevadorfoto {
+    width: 350px;
+    height: 250px;
+    object-fit: cover;
+    float: left;
+    margin-right: 25px;
+}
+.elevadortxt p {
+    font-size: 18px;
+    text-align: left;
+}
 /* rodapé */
 footer{
   clear: both;
