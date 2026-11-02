@@ -102,10 +102,10 @@ header {
 }
 /* caixas - JOSÉ RUAN */
 #boxs {
-  display: flex;             /* Ativa divs na horizontal */
+  display: grid;             /* grid = criar layouts*/
+  grid-template-columns: repeat(3, 1fr); /* Cria 3 colunas de tamanhos iguais */
+  gap: 50px;                /* Espaço entre as caixas */
   justify-content: center;   
-  gap: 50px;                 /* Espaço entre as caixas */
-  
 }
 #caixas {
   width: 350px;
@@ -117,25 +117,44 @@ header {
   text-align: center;
 }
 
-/* 2. Estilizando a imagem para ela  os limites da caixa */
-#caixas .elevadores, .sumid, .sluz {
-  width: 100%;          /* A imagem ocupa toda a largura útil da caixa */
-  height: 200px;        /* Altura fixa para manter um padrão */
+/* IMAGENS */
+#caixas .elevadores, .sumid, .sluz, .portaria {
+  width: 100%;          /* A imagem ocupa toda largura da caixa */
+  height: 200px;        /* Altura */
   border-radius: 10px;  /* Arredonda os cantos da foto */
-  margin-bottom: 15px;  /* Cria um espaço entre a imagem e o texto */
+  margin-bottom: 15px;  /* Espaço entre a imagem e o texto */
 }
-
-/* 3. Estilizando o texto para destacar no fundo escuro */
-#caixas h3{
+#caixas h2{
   color: white;       
+}
+#caixas p{
+ color: rgb(127, 187, 217);   
 }
 #caixas .btn-saiba-mais {
   display: block;
-  background-color: white;
-  color:black;
+  background-color: rgb(127, 187, 217);
+  color: white;
   text-decoration: none;
   padding: 12px;
   border-radius: 10px;
+}
+#caixas .btn-saiba-mais:hover{
+background-color:  rgb(8, 43, 60);
+}
+/* CONFIGURAÇÕES BOTÃO ORÇAMENTO */
+.btn-orcamento {
+background-color:#fa0606;
+color: white;
+padding: 20px;
+font-size: 16px;           
+font-weight: 600;
+border-radius: 20px;
+position: fixed;
+bottom: 20px;   /* Distância da borda inferior da tela */
+right: 25px;    /* Distância da borda lateral direita da tela */
+}
+.btn-orcamento:hover{
+background-color:#660202;
 }
 /* ALISSON GBR */
 .elevadorfoto {
