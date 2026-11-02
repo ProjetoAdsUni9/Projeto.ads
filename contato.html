@@ -1,36 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<script src="script.js" defer></script>
+    <script src="script.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empresa - X Soluções Tech</title>
+    <title>Contato - X Soluções Tech</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <button id="botaoMenu" type="button">☰ Menu</button>
-
-<div id="lateral">
-    <div id="menu">
-        <a href="index.html">Home</a>
-        <a href="empresa.html">Empresa</a>
-        <a href="servicos.html">Serviços</a>
-        <a href="contato.html">Contato</a>
+    <div id="lateral">
+        <div id="menu">
+            <a href="index.html">Home</a>
+            <a href="empresa.html">Empresa</a>
+            <a href="servicos.html">Serviços</a>
+            <a href="contato.html">Contato</a>
+        </div>
     </div>
-</div>
-
     <header>
         <h1>X Soluções Tech</h1>
     </header>
-
     <main>
-        <h2>CONTaTO</h2>
+        <h2>Contato</h2>
         
-    </main>
+        <!-- Formulário de Contato -->
+        <form action="#" method="POST" class="form-contato">
+            <div class="campo-grupo">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+            </div>
 
+            <div class="campo-grupo">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" placeholder="seu-email@exemplo.com" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label for="telefone">Telefone / WhatsApp:</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="campo-grupo">
+                <label for="assunto">Assunto:</label>
+                <select id="assunto" name="assunto" required>
+                    <option value="" disabled selected>Selecione um assunto</option>
+                    <option value="orcamento">Solicitar Orçamento</option>
+                    <option value="suporte">Suporte Técnico</option>
+                    <option value="duvidas">Dúvidas Gerais</option>
+                    <option value="parceria">Parcerias</option>
+                </select>
+            </div>
+
+            <div class="campo-grupo">
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" name="mensagem" rows="6" placeholder="Escreva sua mensagem aqui..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-enviar">Enviar Mensagem</button>
+        </form>
+    </main>
     <footer>
         <p>&copy; 2026 X Soluções Tech. Todos os direitos reservados.</p>
     </footer>
-
 </body>
 </html>
