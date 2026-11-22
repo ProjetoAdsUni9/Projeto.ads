@@ -822,4 +822,149 @@ footer p {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}/* Container do Formulário de Contato */
+.secao-contato {
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 35px;
+  background-color: #131b2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: #f1f5f9;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.secao-contato * {
+  box-sizing: border-box;
+}
+
+.secao-contato h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+.secao-contato .subtitulo-form {
+  margin: 0 0 25px 0;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+/* Estrutura dos Campos */
+.form-contato {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.campo-duplo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-grupo label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+/* Inputs, Select e Textarea */
+.campo-grupo input,
+.campo-grupo select,
+.campo-grupo textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #1c263e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.campo-grupo input::placeholder,
+.campo-grupo textarea::placeholder {
+  color: #64748b;
+}
+
+.campo-grupo input:focus,
+.campo-grupo select:focus,
+.campo-grupo textarea:focus {
+  border-color: #00d2ff;
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.15);
+}
+
+.campo-grupo input[readonly] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Botão Enviar */
+.btn-enviar {
+  margin-top: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-enviar:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.btn-enviar:disabled {
+  background: #475569;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mensagem de Retorno da API */
+.status-envio {
+  display: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.status-envio.sucesso {
+  display: block;
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+
+.status-envio.erro {
+  display: block;
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #f87171;
+}
+
+/* Responsividade para Celular */
+@media (max-width: 600px) {
+  .secao-contato {
+    margin: 20px 15px;
+    padding: 25px 20px;
+  }
+
+  .campo-duplo {
+    grid-template-columns: 1fr;
+  }
 }
