@@ -968,3 +968,175 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+.secao-contato {
+  --primary-blue: #0056b3;
+  --secondary-blue: #00a8ff;
+  --deep-blue: #061325;
+  --navy-blue: #0b2242;
+  --card-blue: #102a52;
+  --light-blue-bg: #e6f2ff;
+  --ice-white: #f4f9ff;
+  --white: #ffffff;
+  --text-light: #e2f1ff;
+  --text-muted: #9ec5eb;
+  --border-blue: rgba(0, 168, 255, 0.25);
+  --radius-lg: 22px;
+  --radius-md: 12px;
+  --shadow-md: 0 12px 30px rgba(0, 30, 70, 0.35);
+  --shadow-lg: 0 20px 40px rgba(0, 86, 179, 0.4);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 35px;
+  background-color: var(--card-blue);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-lg);
+  color: var(--text-light);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  box-shadow: var(--shadow-md);
+  box-sizing: border-box;
+}
+
+.secao-contato * {
+  box-sizing: border-box;
+}
+
+.secao-contato h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.75rem;
+  color: var(--white);
+}
+
+.secao-contato .subtitulo-form {
+  margin: 0 0 25px 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.form-contato {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.campo-duplo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.campo-triplo {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 15px;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-grupo label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ice-white);
+}
+
+.campo-grupo input,
+.campo-grupo select,
+.campo-grupo textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: var(--navy-blue);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+
+.campo-grupo input::placeholder,
+.campo-grupo textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.campo-grupo input:focus,
+.campo-grupo select:focus,
+.campo-grupo textarea:focus {
+  background-color: var(--deep-blue);
+  border-color: var(--secondary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2);
+}
+
+.campo-grupo input[readonly] {
+  background-color: var(--deep-blue);
+  color: var(--text-muted);
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.btn-enviar {
+  margin-top: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-enviar:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-enviar:disabled {
+  background: var(--navy-blue);
+  color: var(--text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status-envio {
+  display: none;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.status-envio.sucesso {
+  display: block;
+  background-color: rgba(0, 168, 255, 0.15);
+  border: 1px solid var(--secondary-blue);
+  color: var(--ice-white);
+}
+
+.status-envio.erro {
+  display: block;
+  background-color: rgba(6, 19, 37, 0.85);
+  border: 1px solid var(--primary-blue);
+  color: var(--light-blue-bg);
+}
+
+@media (max-width: 650px) {
+  .secao-contato {
+    margin: 20px 15px;
+    padding: 25px 20px;
+  }
+
+  .campo-duplo,
+  .campo-triplo {
+    grid-template-columns: 1fr;
+  }
+}
