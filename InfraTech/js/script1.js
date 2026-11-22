@@ -195,4 +195,89 @@ if (areaLogin && formRecuperacaoSenha) {
         formRecuperacaoSenha.reset();
         mostrarAlerta("Senha atualizada com sucesso!");
     });
+    document.addEventListener("DOMContentLoaded", () => {
+  const cepInput = document.getElementById("cep");
+  const telefoneInput = document.getElementById("telefone");
+  const formContato = document.getElementById("formContato");
+  const statusEnvio = document.getElementById("statusEnvio");
+  const btnEnviar = document.getElementById("btnEnviar");
+
+  // 1. Máscara automática de Telefone
+  telefoneInput.addEventListener("input", (e) => {
+    let v = e.target.value.replace(/\D/g, "");
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+    e.target.value = v;
+  });
+
+  // 2. API ViaCEP (Busca automática de endereço ao digitar o CEP)
+  cepInput.addEventListener("input", async (e) => {
+    let cep = e.target.value.replace(/\D/g, "");
+    
+    // Formata 00000-000
+    if (cep.length > 5) {
+      e.target.value = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+    }
+
+    if (cep.length === 8) {
+      try {
+        document.getElementById("cidade").value = "Buscando...";
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          document.getElementById("cidade").value = `${data.localidade} - ${data.uf}`;
+          document.getElementById("endereco").value = `${data.logradouro}, ${data.bairro}`;
+        } else {
+          document.getElementById("cidade").value = "CEP não encontrado";
+        }
+      } catch (error) {
+        console.error("Erro na API ViaCEP:", error);
+        document.getElementById("cidade").value = "Erro ao buscar CEP";
+      }
+    }
+  });
+
+  // 3. API de Envio de Formulário (Fetch API via FormSubmit)
+  // Troque 'seu-email@infratech.com.br' pelo e-mail real da empresa
+  const ENDPOINT_API = "https://formsubmit.co/ajax/seu-email@infratech.com.br";
+
+  formContato.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = "Enviando...";
+    statusEnvio.className = "status-envio";
+    statusEnvio.style.display = "none";
+
+    // Coleta os dados do formulário
+    const formData = new FormData(formContato);
+    const dados = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch(ENDPOINT_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(dados)
+      });
+
+      if (response.ok) {
+        statusEnvio.textContent = "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
+        statusEnvio.classList.add("sucesso");
+        formContato.reset();
+      } else {
+        throw new Error("Falha no servidor");
+      }
+    } catch (error) {
+      statusEnvio.textContent = "Não foi possível enviar a mensagem agora. Tente novamente mais tarde.";
+      statusEnvio.classList.add("erro");
+    } finally {
+      btnEnviar.disabled = false;
+      btnEnviar.textContent = "Enviar Mensagem";
+    }
+  });
+});
 }
