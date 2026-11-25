@@ -1044,3 +1044,110 @@ body.pagina-contato {
     grid-template-columns: 1fr;
   }
 }
+.empresa-container {
+ padding: 50px 8%;
+ color: white;
+}
+
+.empresa-banner {
+ text-align: center;
+ padding: 70px 20px;
+ background: linear-gradient(135deg, #0754a5, #071c3d);
+ border-radius: 20px;
+ margin-bottom: 40px;
+}
+
+.empresa-banner h1 {
+ font-size: 38px;
+ color: #00c8ff;
+}
+
+.empresa-banner p {
+ font-size: 18px;
+ margin-top: 15px;
+}
+
+.historia {
+ text-align: center;
+ max-width: 850px;
+ margin: 50px auto;
+}
+
+.historia h2 {
+ color: #00c8ff;
+ margin-bottom: 20px;
+}
+
+.historia p {
+ line-height: 1.8;
+ color: #d5e4f5;
+}
+
+.missao-visao-valores {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 25px;
+ margin-top: 50px;
+}
+
+.empresa-card {
+ background: linear-gradient(145deg, #0754a5, #092747);
+ padding: 30px;
+ border-radius: 18px;
+ border: 1px solid #087dcb;
+ transition: 0.3s;
+}
+
+.empresa-card:hover {
+ transform: translateY(-8px);
+ box-shadow: 0 5px 20px #00aaff55;
+}
+
+.empresa-card h2 {
+ color: #00c8ff;
+ margin-bottom: 18px;
+}
+
+.empresa-card p {
+ line-height: 1.7;
+ color: #e0edfa;
+}
+
+.empresa-final {
+ text-align: center;
+ padding: 60px 20px;
+}
+
+.empresa-final h2 {
+ color: #00c8ff;
+ margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+ .missao-visao-valores {
+ grid-template-columns: 1fr;
+ }
+}
+/* Corrigir espaço abaixo do menu */
+body {
+padding-top: 100px;
+}
+
+/* Ajustar conteúdo da página Empresa */
+.empresa-container {
+position: relative;
+z-index: 1;
+padding-top: 50px;
+margin-top: 0;
+}
+
+/* Garantir que o menu fique acima do conteúdo */
+.nav-flutuante-wrapper {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+z-index: 9999;
+}
+
+
