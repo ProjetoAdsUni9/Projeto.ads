@@ -1,3 +1,8 @@
+
+// ==========================================
+// 1. MODAL DE ALERTA PERSONALIZADO
+// ==========================================
+
 const alertaSucesso = document.createElement("div");
 alertaSucesso.className = "alerta-overlay";
 alertaSucesso.hidden = true;
@@ -25,7 +30,13 @@ botaoAlerta.className = "alerta-botao";
 botaoAlerta.type = "button";
 botaoAlerta.textContent = "Continuar";
 
-caixaAlerta.append(iconeAlerta, tituloAlerta, textoAlerta, botaoAlerta);
+caixaAlerta.append(
+    iconeAlerta,
+    tituloAlerta,
+    textoAlerta,
+    botaoAlerta
+);
+
 alertaSucesso.appendChild(caixaAlerta);
 document.body.appendChild(alertaSucesso);
 
@@ -33,6 +44,7 @@ let elementoAnteriorAlerta;
 
 function fecharAlerta() {
     alertaSucesso.hidden = true;
+
     if (elementoAnteriorAlerta) {
         elementoAnteriorAlerta.focus();
     }
@@ -40,15 +52,26 @@ function fecharAlerta() {
 
 function mostrarAlerta(mensagem, tipo = "sucesso") {
     elementoAnteriorAlerta = document.activeElement;
+
     textoAlerta.textContent = mensagem;
-    tituloAlerta.textContent = tipo === "erro" ? "Não foi possível entrar" : "Sucesso!";
-    iconeAlerta.textContent = tipo === "erro" ? "!" : "✓";
-    alertaSucesso.classList.toggle("alerta-erro", tipo === "erro");
+
+    tituloAlerta.textContent =
+        tipo === "erro" ? "Não foi possível entrar" : "Sucesso!";
+
+    iconeAlerta.textContent =
+        tipo === "erro" ? "!" : "✓";
+
+    alertaSucesso.classList.toggle(
+        "alerta-erro",
+        tipo === "erro"
+    );
+
     alertaSucesso.hidden = false;
     botaoAlerta.focus();
 }
 
 botaoAlerta.addEventListener("click", fecharAlerta);
+
 alertaSucesso.addEventListener("click", function(event) {
     if (event.target === alertaSucesso) {
         fecharAlerta();
@@ -61,34 +84,54 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+
+// ==========================================
+// 2. MOSTRAR / OCULTAR SENHA
+// ==========================================
+
 document.querySelectorAll(".alternar-senha").forEach(function(opcao) {
+
     function atualizarVisibilidade() {
         const tipo = opcao.checked ? "text" : "password";
+
         opcao.dataset.campos.trim().split(/\s+/).forEach(function(idCampo) {
-            document.getElementById(idCampo).type = tipo;
+            const campo = document.getElementById(idCampo);
+
+            if (campo) {
+                campo.type = tipo;
+            }
         });
     }
 
     opcao.addEventListener("change", atualizarVisibilidade);
-    opcao.closest("form").addEventListener("reset", function() {
-        opcao.checked = false;
-        atualizarVisibilidade();
-    });
+
+    const formPai = opcao.closest("form");
+
+    if (formPai) {
+        formPai.addEventListener("reset", function() {
+            opcao.checked = false;
+            atualizarVisibilidade();
+        });
+    }
 });
 
-// CADASTRO
+
+// ==========================================
+// 3. CADASTRO
+// ==========================================
+
 const formulario = document.getElementById("formCadastro");
 
 if (formulario) {
 
-    formulario.addEventListener("submit", function(event){
-
+    formulario.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const nome = document.getElementById("nome").value;
-        const email = document.getElementById("email").value;
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
         const senha = document.getElementById("senha").value;
-        const confirmarSenha = document.getElementById("confirmarSenha").value;
+        const confirmarSenha =
+            document.getElementById("confirmarSenha").value;
 
         const mensagem = document.getElementById("mensagem");
 
@@ -104,180 +147,337 @@ if (formulario) {
 
         mensagem.textContent = "Cadastro realizado com sucesso!";
         mensagem.style.color = "green";
+
         mostrarAlerta("Cadastro realizado com sucesso!");
     });
-
 }
 
-// LOGIN
+
+// ==========================================
+// 4. LOGIN
+// ==========================================
+
 const formLogin = document.getElementById("formLogin");
 
 if (formLogin) {
 
-    formLogin.addEventListener("submit", function(event){
-
+    formLogin.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const emailDigitado = document.getElementById("emailLogin").value;
-        const senhaDigitada = document.getElementById("senhaLogin").value;
+        const emailDigitado =
+            document.getElementById("emailLogin").value.trim();
+
+        const senhaDigitada =
+            document.getElementById("senhaLogin").value;
 
         const emailSalvo = localStorage.getItem("email");
         const senhaSalva = localStorage.getItem("senha");
 
         const mensagem = document.getElementById("mensagemLogin");
 
-        if(emailDigitado === emailSalvo && senhaDigitada === senhaSalva){
-
+        if (
+            emailDigitado === emailSalvo &&
+            senhaDigitada === senhaSalva &&
+            emailSalvo !== null
+        ) {
             mensagem.textContent = "Login realizado com sucesso!";
             mensagem.style.color = "green";
+
             mostrarAlerta("Login realizado com sucesso!");
 
         } else {
 
-            mensagem.textContent = "Dados incorretos ou não cadastrados.";
+            mensagem.textContent =
+                "Dados incorretos ou não cadastrados.";
+
             mensagem.style.color = "red";
-            mostrarAlerta("Dados incorretos ou não cadastrados.", "erro");
 
+            mostrarAlerta(
+                "Dados incorretos ou não cadastrados.",
+                "erro"
+            );
         }
-
     });
-
 }
 
+
+// ==========================================
+// 5. RECUPERAÇÃO DE SENHA
+// ==========================================
+
 const areaLogin = document.getElementById("areaLogin");
-const formRecuperacaoSenha = document.getElementById("formRecuperacaoSenha");
+
+const formRecuperacaoSenha =
+    document.getElementById("formRecuperacaoSenha");
 
 if (areaLogin && formRecuperacaoSenha) {
-    const tituloFormulario = document.getElementById("tituloFormulario");
-    const botaoEsqueciSenha = document.getElementById("botaoEsqueciSenha");
-    const botaoVoltarLogin = document.getElementById("botaoVoltarLogin");
-    const campoEmailRecuperacao = document.getElementById("emailRecuperacao");
-    const campoNovaSenha = document.getElementById("novaSenha");
-    const campoConfirmarNovaSenha = document.getElementById("confirmarNovaSenha");
-    const mensagemRecuperacao = document.getElementById("mensagemRecuperacao");
+
+    const tituloFormulario =
+        document.getElementById("tituloFormulario");
+
+    const botaoEsqueciSenha =
+        document.getElementById("botaoEsqueciSenha");
+
+    const botaoVoltarLogin =
+        document.getElementById("botaoVoltarLogin");
+
+    const campoEmailRecuperacao =
+        document.getElementById("emailRecuperacao");
+
+    const campoNovaSenha =
+        document.getElementById("novaSenha");
+
+    const campoConfirmarNovaSenha =
+        document.getElementById("confirmarNovaSenha");
+
+    const mensagemRecuperacao =
+        document.getElementById("mensagemRecuperacao");
+
 
     botaoEsqueciSenha.addEventListener("click", function() {
+
         areaLogin.hidden = true;
         formRecuperacaoSenha.hidden = false;
+
         tituloFormulario.textContent = "Redefinir senha";
+
         mensagemRecuperacao.textContent = "";
+
         formRecuperacaoSenha.reset();
+
         campoEmailRecuperacao.focus();
     });
 
+
     botaoVoltarLogin.addEventListener("click", function() {
+
         formRecuperacaoSenha.hidden = true;
         areaLogin.hidden = false;
+
         tituloFormulario.textContent = "Login";
+
         mensagemRecuperacao.textContent = "";
+
         document.getElementById("emailLogin").focus();
     });
 
+
     formRecuperacaoSenha.addEventListener("submit", function(event) {
+
         event.preventDefault();
 
         const emailSalvo = localStorage.getItem("email");
-        if (!emailSalvo || campoEmailRecuperacao.value !== emailSalvo) {
-            mensagemRecuperacao.textContent = "Não encontramos um cadastro com esse email.";
+
+        if (
+            !emailSalvo ||
+            campoEmailRecuperacao.value.trim() !== emailSalvo
+        ) {
+            mensagemRecuperacao.textContent =
+                "Não encontramos um cadastro com esse email.";
+
             mensagemRecuperacao.style.color = "red";
             return;
         }
 
-        if (campoNovaSenha.value !== campoConfirmarNovaSenha.value) {
-            mensagemRecuperacao.textContent = "As senhas não coincidem.";
+        if (
+            campoNovaSenha.value !==
+            campoConfirmarNovaSenha.value
+        ) {
+            mensagemRecuperacao.textContent =
+                "As senhas não coincidem.";
+
             mensagemRecuperacao.style.color = "red";
             return;
         }
 
         localStorage.setItem("senha", campoNovaSenha.value);
-        mensagemRecuperacao.textContent = "Senha atualizada. Volte ao login para entrar.";
+
+        mensagemRecuperacao.textContent =
+            "Senha atualizada. Volte ao login para entrar.";
+
         mensagemRecuperacao.style.color = "green";
+
         formRecuperacaoSenha.reset();
+
         mostrarAlerta("Senha atualizada com sucesso!");
     });
-    document.addEventListener("DOMContentLoaded", () => {
-  const cepInput = document.getElementById("cep");
-  const telefoneInput = document.getElementById("telefone");
-  const formContato = document.getElementById("formContato");
-  const statusEnvio = document.getElementById("statusEnvio");
-  const btnEnviar = document.getElementById("btnEnviar");
+}
 
-  // 1. Máscara automática de Telefone
-  telefoneInput.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-    v = v.replace(/(\d)(\d{4})$/, "$1-$2");
-    e.target.value = v;
-  });
 
-  // 2. API ViaCEP (Busca automática de endereço ao digitar o CEP)
-  cepInput.addEventListener("input", async (e) => {
-    let cep = e.target.value.replace(/\D/g, "");
-    
-    // Formata 00000-000
-    if (cep.length > 5) {
-      e.target.value = cep.replace(/^(\d{5})(\d)/, "$1-$2");
-    }
+// ==========================================
+// 6. CONTATO, MÁSCARAS E API VIACEP
+// ==========================================
 
-    if (cep.length === 8) {
-      try {
-        document.getElementById("cidade").value = "Buscando...";
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
+const cepInput = document.getElementById("cep");
+const telefoneInput = document.getElementById("telefone");
 
-        if (!data.erro) {
-          document.getElementById("cidade").value = `${data.localidade} - ${data.uf}`;
-          document.getElementById("endereco").value = `${data.logradouro}, ${data.bairro}`;
-        } else {
-          document.getElementById("cidade").value = "CEP não encontrado";
+const formContato = document.getElementById("formContato");
+
+const statusEnvio = document.getElementById("statusEnvio");
+
+const btnEnviar = document.getElementById("btnEnviar");
+
+
+// MÁSCARA DE TELEFONE
+
+if (telefoneInput) {
+
+    telefoneInput.addEventListener("input", function(e) {
+
+        let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+
+        if (v.length > 10) {
+            v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+        } else if (v.length > 6) {
+            v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+        } else if (v.length > 2) {
+            v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
         }
-      } catch (error) {
-        console.error("Erro na API ViaCEP:", error);
-        document.getElementById("cidade").value = "Erro ao buscar CEP";
-      }
-    }
-  });
 
-  // 3. API de Envio de Formulário (Fetch API via FormSubmit)
-  // Troque 'seu-email@infratech.com.br' pelo e-mail real da empresa
-  const ENDPOINT_API = "https://formsubmit.co/ajax/seu-email@infratech.com.br";
+        e.target.value = v;
+    });
+}
 
-  formContato.addEventListener("submit", async (e) => {
-    e.preventDefault();
 
-    btnEnviar.disabled = true;
-    btnEnviar.textContent = "Enviando...";
-    statusEnvio.className = "status-envio";
-    statusEnvio.style.display = "none";
+// MÁSCARA E CONSULTA DE CEP
 
-    // Coleta os dados do formulário
-    const formData = new FormData(formContato);
-    const dados = Object.fromEntries(formData.entries());
+if (cepInput) {
 
-    try {
-      const response = await fetch(ENDPOINT_API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(dados)
-      });
+    cepInput.addEventListener("input", async function(e) {
 
-      if (response.ok) {
-        statusEnvio.textContent = "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
-        statusEnvio.classList.add("sucesso");
-        formContato.reset();
-      } else {
-        throw new Error("Falha no servidor");
-      }
-    } catch (error) {
-      statusEnvio.textContent = "Não foi possível enviar a mensagem agora. Tente novamente mais tarde.";
-      statusEnvio.classList.add("erro");
-    } finally {
-      btnEnviar.disabled = false;
-      btnEnviar.textContent = "Enviar Mensagem";
-    }
-  });
-});
+        let cep = e.target.value.replace(/\D/g, "").slice(0, 8);
+
+        if (cep.length > 5) {
+            e.target.value = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+        } else {
+            e.target.value = cep;
+        }
+
+        if (cep.length === 8) {
+
+            const campoCidade = document.getElementById("cidade");
+            const campoRua = document.getElementById("rua");
+            const campoBairro = document.getElementById("bairro");
+
+            try {
+
+                campoCidade.value = "Buscando...";
+
+                const response = await fetch(
+                    `https://viacep.com.br/ws/${cep}/json/`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Erro na consulta do CEP");
+                }
+
+                const data = await response.json();
+
+                if (!data.erro) {
+
+                    campoCidade.value =
+                        `${data.localidade} - ${data.uf}`;
+
+                    campoRua.value = data.logradouro || "";
+
+                    campoBairro.value = data.bairro || "";
+
+                    const campoNumero =
+                        document.getElementById("numero");
+
+                    if (campoNumero) {
+                        campoNumero.focus();
+                    }
+
+                } else {
+
+                    campoCidade.value = "CEP não encontrado";
+                    campoRua.value = "";
+                    campoBairro.value = "";
+                }
+
+            } catch (error) {
+
+                console.error("Erro na API ViaCEP:", error);
+
+                campoCidade.value = "Erro ao buscar CEP";
+            }
+        }
+    });
+}
+
+
+// ENVIO DO FORMULÁRIO DE CONTATO
+
+if (formContato) {
+
+    // TROQUE PELO SEU E-MAIL REAL
+    const ENDPOINT_API =
+        "https://formsubmit.co/ajax/projetoadsuni9@gmail.com";
+
+    formContato.addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = "Enviando...";
+
+        statusEnvio.className = "status-envio";
+        statusEnvio.style.display = "none";
+
+        const formData = new FormData(formContato);
+
+        const dados = Object.fromEntries(formData.entries());
+
+        try {
+
+            const response = await fetch(ENDPOINT_API, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+
+                body: JSON.stringify(dados)
+            });
+
+            if (!response.ok) {
+                throw new Error("Falha no servidor");
+            }
+
+            const resultado = await response.json();
+
+            if (resultado.success === "false") {
+                throw new Error("Falha no envio");
+            }
+
+            statusEnvio.textContent =
+                "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
+
+            statusEnvio.classList.add("sucesso");
+
+            statusEnvio.style.display = "block";
+
+            formContato.reset();
+
+        } catch (error) {
+
+            console.error("Erro ao enviar:", error);
+
+            statusEnvio.textContent =
+                "Não foi possível enviar a mensagem. Tente novamente mais tarde.";
+
+            statusEnvio.classList.add("erro");
+
+            statusEnvio.style.display = "block";
+
+        } finally {
+
+            btnEnviar.disabled = false;
+
+            btnEnviar.textContent = "Enviar Mensagem";
+        }
+    });
 }
