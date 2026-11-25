@@ -535,18 +535,93 @@ if (formContato) {
 
         } catch (error) {
 
-            console.error("Erro ao enviar:", error);
+  
+// ==========================================
+// 7. ENVIO E ARMAZENAMENTO DOS CONTATOS
+// ==========================================
+
+if (formContato) {
+
+    formContato.addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        if (!btnEnviar || !statusEnvio) {
+            console.error("Verifique os IDs btnEnviar e statusEnvio no HTML.");
+            return;
+        }
+
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = "Salvando...";
+
+        statusEnvio.className = "status-envio";
+        statusEnvio.style.display = "none";
+
+        try {
+
+            // Captura os dados preenchidos no formulário
+            const contato = {
+                nome: document.getElementById("nome").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                telefone: document.getElementById("telefone").value.trim(),
+                cep: document.getElementById("cep").value.trim(),
+                cidade: document.getElementById("cidade").value.trim(),
+                rua: document.getElementById("rua").value.trim(),
+                numero: document.getElementById("numero").value.trim(),
+                bairro: document.getElementById("bairro").value.trim(),
+                assunto: document.getElementById("assunto").value,
+                mensagem: document.getElementById("mensagem").value.trim(),
+                dataEnvio: new Date().toLocaleString("pt-BR")
+            };
+
+            // Recupera os contatos já armazenados
+            let contatos = JSON.parse(
+                localStorage.getItem("contatos")
+            ) || [];
+
+            // Adiciona o novo contato
+            contatos.push(contato);
+
+            // Salva todos os contatos no navegador
+            localStorage.setItem(
+                "contatos",
+                JSON.stringify(contatos)
+            );
+
+            // Exibe mensagem de sucesso
+            statusEnvio.textContent =
+                "Mensagem enviada e armazenada com sucesso!";
+
+            statusEnvio.classList.add("sucesso");
+            statusEnvio.style.display = "block";
+
+            mostrarAlerta(
+                "Seu contato foi armazenado com sucesso!"
+            );
+
+            // Limpa os campos
+            formContato.reset();
+
+        } catch (error) {
+
+            console.error("Erro ao armazenar contato:", error);
 
             statusEnvio.textContent =
-                "Não foi possível enviar a mensagem. Tente novamente mais tarde.";
+                "Não foi possível armazenar sua mensagem. Tente novamente.";
 
             statusEnvio.classList.add("erro");
             statusEnvio.style.display = "block";
+
+            mostrarAlerta(
+                "Não foi possível salvar seu contato.",
+                "erro"
+            );
 
         } finally {
 
             btnEnviar.disabled = false;
             btnEnviar.textContent = "Enviar Mensagem";
+
         }
     });
 }
