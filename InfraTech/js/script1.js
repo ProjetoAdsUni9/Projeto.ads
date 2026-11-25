@@ -94,7 +94,12 @@ document.querySelectorAll(".alternar-senha").forEach(function(opcao) {
     function atualizarVisibilidade() {
         const tipo = opcao.checked ? "text" : "password";
 
-        opcao.dataset.campos.trim().split(/\s+/).forEach(function(idCampo) {
+        const campos = (opcao.dataset.campos || "")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+        campos.forEach(function(idCampo) {
             const campo = document.getElementById(idCampo);
 
             if (campo) {
@@ -136,8 +141,10 @@ if (formulario) {
         const mensagem = document.getElementById("mensagem");
 
         if (senha !== confirmarSenha) {
-            mensagem.textContent = "As senhas não coincidem!";
-            mensagem.style.color = "red";
+            if (mensagem) {
+                mensagem.textContent = "As senhas não coincidem!";
+                mensagem.style.color = "red";
+            }
             return;
         }
 
@@ -145,8 +152,10 @@ if (formulario) {
         localStorage.setItem("email", email);
         localStorage.setItem("senha", senha);
 
-        mensagem.textContent = "Cadastro realizado com sucesso!";
-        mensagem.style.color = "green";
+        if (mensagem) {
+            mensagem.textContent = "Cadastro realizado com sucesso!";
+            mensagem.style.color = "green";
+        }
 
         mostrarAlerta("Cadastro realizado com sucesso!");
     });
@@ -180,17 +189,21 @@ if (formLogin) {
             senhaDigitada === senhaSalva &&
             emailSalvo !== null
         ) {
-            mensagem.textContent = "Login realizado com sucesso!";
-            mensagem.style.color = "green";
+            if (mensagem) {
+                mensagem.textContent = "Login realizado com sucesso!";
+                mensagem.style.color = "green";
+            }
 
             mostrarAlerta("Login realizado com sucesso!");
 
         } else {
 
-            mensagem.textContent =
-                "Dados incorretos ou não cadastrados.";
+            if (mensagem) {
+                mensagem.textContent =
+                    "Dados incorretos ou não cadastrados.";
 
-            mensagem.style.color = "red";
+                mensagem.style.color = "red";
+            }
 
             mostrarAlerta(
                 "Dados incorretos ou não cadastrados.",
@@ -233,74 +246,92 @@ if (areaLogin && formRecuperacaoSenha) {
     const mensagemRecuperacao =
         document.getElementById("mensagemRecuperacao");
 
+    if (
+        botaoEsqueciSenha &&
+        botaoVoltarLogin &&
+        campoEmailRecuperacao &&
+        campoNovaSenha &&
+        campoConfirmarNovaSenha &&
+        mensagemRecuperacao
+    ) {
 
-    botaoEsqueciSenha.addEventListener("click", function() {
+        botaoEsqueciSenha.addEventListener("click", function() {
 
-        areaLogin.hidden = true;
-        formRecuperacaoSenha.hidden = false;
+            areaLogin.hidden = true;
+            formRecuperacaoSenha.hidden = false;
 
-        tituloFormulario.textContent = "Redefinir senha";
+            if (tituloFormulario) {
+                tituloFormulario.textContent = "Redefinir senha";
+            }
 
-        mensagemRecuperacao.textContent = "";
+            mensagemRecuperacao.textContent = "";
 
-        formRecuperacaoSenha.reset();
+            formRecuperacaoSenha.reset();
 
-        campoEmailRecuperacao.focus();
-    });
-
-
-    botaoVoltarLogin.addEventListener("click", function() {
-
-        formRecuperacaoSenha.hidden = true;
-        areaLogin.hidden = false;
-
-        tituloFormulario.textContent = "Login";
-
-        mensagemRecuperacao.textContent = "";
-
-        document.getElementById("emailLogin").focus();
-    });
+            campoEmailRecuperacao.focus();
+        });
 
 
-    formRecuperacaoSenha.addEventListener("submit", function(event) {
+        botaoVoltarLogin.addEventListener("click", function() {
 
-        event.preventDefault();
+            formRecuperacaoSenha.hidden = true;
+            areaLogin.hidden = false;
 
-        const emailSalvo = localStorage.getItem("email");
+            if (tituloFormulario) {
+                tituloFormulario.textContent = "Login";
+            }
 
-        if (
-            !emailSalvo ||
-            campoEmailRecuperacao.value.trim() !== emailSalvo
-        ) {
+            mensagemRecuperacao.textContent = "";
+
+            const emailLogin =
+                document.getElementById("emailLogin");
+
+            if (emailLogin) {
+                emailLogin.focus();
+            }
+        });
+
+
+        formRecuperacaoSenha.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const emailSalvo = localStorage.getItem("email");
+
+            if (
+                !emailSalvo ||
+                campoEmailRecuperacao.value.trim() !== emailSalvo
+            ) {
+                mensagemRecuperacao.textContent =
+                    "Não encontramos um cadastro com esse email.";
+
+                mensagemRecuperacao.style.color = "red";
+                return;
+            }
+
+            if (
+                campoNovaSenha.value !==
+                campoConfirmarNovaSenha.value
+            ) {
+                mensagemRecuperacao.textContent =
+                    "As senhas não coincidem.";
+
+                mensagemRecuperacao.style.color = "red";
+                return;
+            }
+
+            localStorage.setItem("senha", campoNovaSenha.value);
+
             mensagemRecuperacao.textContent =
-                "Não encontramos um cadastro com esse email.";
+                "Senha atualizada. Volte ao login para entrar.";
 
-            mensagemRecuperacao.style.color = "red";
-            return;
-        }
+            mensagemRecuperacao.style.color = "green";
 
-        if (
-            campoNovaSenha.value !==
-            campoConfirmarNovaSenha.value
-        ) {
-            mensagemRecuperacao.textContent =
-                "As senhas não coincidem.";
+            formRecuperacaoSenha.reset();
 
-            mensagemRecuperacao.style.color = "red";
-            return;
-        }
-
-        localStorage.setItem("senha", campoNovaSenha.value);
-
-        mensagemRecuperacao.textContent =
-            "Senha atualizada. Volte ao login para entrar.";
-
-        mensagemRecuperacao.style.color = "green";
-
-        formRecuperacaoSenha.reset();
-
-        mostrarAlerta("Senha atualizada com sucesso!");
-    });
+            mostrarAlerta("Senha atualizada com sucesso!");
+        });
+    }
 }
 
 
@@ -327,9 +358,15 @@ if (telefoneInput) {
         let v = e.target.value.replace(/\D/g, "").slice(0, 11);
 
         if (v.length > 10) {
-            v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+            v = v.replace(
+                /^(\d{2})(\d{5})(\d{4}).*/,
+                "($1) $2-$3"
+            );
         } else if (v.length > 6) {
-            v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+            v = v.replace(
+                /^(\d{2})(\d{4})(\d{0,4}).*/,
+                "($1) $2-$3"
+            );
         } else if (v.length > 2) {
             v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
         }
@@ -343,81 +380,114 @@ if (telefoneInput) {
 
 if (cepInput) {
 
+    let consultaAtual = 0;
+
     cepInput.addEventListener("input", async function(e) {
 
         let cep = e.target.value.replace(/\D/g, "").slice(0, 8);
 
-        if (cep.length > 5) {
-            e.target.value = cep.replace(/^(\d{5})(\d)/, "$1-$2");
-        } else {
-            e.target.value = cep;
+        e.target.value = cep.length > 5
+            ? cep.replace(/^(\d{5})(\d)/, "$1-$2")
+            : cep;
+
+        const campoCidade = document.getElementById("cidade");
+        const campoRua = document.getElementById("rua");
+        const campoBairro = document.getElementById("bairro");
+
+        if (!campoCidade || !campoRua || !campoBairro) {
+            console.error("Verifique os IDs dos campos no HTML.");
+            return;
         }
 
-        if (cep.length === 8) {
+        consultaAtual++;
+        const numeroConsulta = consultaAtual;
 
-            const campoCidade = document.getElementById("cidade");
-            const campoRua = document.getElementById("rua");
-            const campoBairro = document.getElementById("bairro");
+        if (cep.length < 8) {
+            campoCidade.value = "";
+            campoRua.value = "";
+            campoBairro.value = "";
+            return;
+        }
 
-            try {
+        try {
 
-                campoCidade.value = "Buscando...";
+            campoCidade.value = "Buscando...";
+            campoRua.value = "";
+            campoBairro.value = "";
 
-                const response = await fetch(
-                    `https://viacep.com.br/ws/${cep}/json/`
-                );
+            const response = await fetch(
+                `https://viacep.com.br/ws/${cep}/json/`
+            );
 
-                if (!response.ok) {
-                    throw new Error("Erro na consulta do CEP");
-                }
-
-                const data = await response.json();
-
-                if (!data.erro) {
-
-                    campoCidade.value =
-                        `${data.localidade} - ${data.uf}`;
-
-                    campoRua.value = data.logradouro || "";
-
-                    campoBairro.value = data.bairro || "";
-
-                    const campoNumero =
-                        document.getElementById("numero");
-
-                    if (campoNumero) {
-                        campoNumero.focus();
-                    }
-
-                } else {
-
-                    campoCidade.value = "CEP não encontrado";
-                    campoRua.value = "";
-                    campoBairro.value = "";
-                }
-
-            } catch (error) {
-
-                console.error("Erro na API ViaCEP:", error);
-
-                campoCidade.value = "Erro ao buscar CEP";
+            if (!response.ok) {
+                throw new Error("Erro na consulta do CEP");
             }
+
+            const data = await response.json();
+
+            // Impede uma consulta antiga de sobrescrever a mais recente
+            if (numeroConsulta !== consultaAtual) {
+                return;
+            }
+
+            if (data.erro) {
+
+                campoCidade.value = "";
+                campoRua.value = "";
+                campoBairro.value = "";
+
+                alert("CEP não encontrado!");
+                return;
+            }
+
+            campoCidade.value =
+                `${data.localidade} - ${data.uf}`;
+
+            campoRua.value = data.logradouro || "";
+            campoBairro.value = data.bairro || "";
+
+            const campoNumero =
+                document.getElementById("numero");
+
+            if (campoNumero) {
+                campoNumero.focus();
+            }
+
+        } catch (error) {
+
+            if (numeroConsulta !== consultaAtual) {
+                return;
+            }
+
+            console.error("Erro na API ViaCEP:", error);
+
+            campoCidade.value = "";
+            campoRua.value = "";
+            campoBairro.value = "";
+
+            alert("Não foi possível consultar o CEP. Verifique sua conexão.");
         }
     });
 }
 
 
-// ENVIO DO FORMULÁRIO DE CONTATO
+// ==========================================
+// 7. ENVIO DO FORMULÁRIO DE CONTATO
+// ==========================================
 
 if (formContato) {
 
-    // TROQUE PELO SEU E-MAIL REAL
     const ENDPOINT_API =
         "https://formsubmit.co/ajax/projetoadsuni9@gmail.com";
 
     formContato.addEventListener("submit", async function(e) {
 
         e.preventDefault();
+
+        if (!btnEnviar || !statusEnvio) {
+            console.error("Verifique os IDs btnEnviar e statusEnvio no HTML.");
+            return;
+        }
 
         btnEnviar.disabled = true;
         btnEnviar.textContent = "Enviando...";
@@ -426,7 +496,6 @@ if (formContato) {
         statusEnvio.style.display = "none";
 
         const formData = new FormData(formContato);
-
         const dados = Object.fromEntries(formData.entries());
 
         try {
@@ -449,7 +518,10 @@ if (formContato) {
 
             const resultado = await response.json();
 
-            if (resultado.success === "false") {
+            if (
+                resultado.success === false ||
+                resultado.success === "false"
+            ) {
                 throw new Error("Falha no envio");
             }
 
@@ -457,7 +529,6 @@ if (formContato) {
                 "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
 
             statusEnvio.classList.add("sucesso");
-
             statusEnvio.style.display = "block";
 
             formContato.reset();
@@ -470,13 +541,11 @@ if (formContato) {
                 "Não foi possível enviar a mensagem. Tente novamente mais tarde.";
 
             statusEnvio.classList.add("erro");
-
             statusEnvio.style.display = "block";
 
         } finally {
 
             btnEnviar.disabled = false;
-
             btnEnviar.textContent = "Enviar Mensagem";
         }
     });
