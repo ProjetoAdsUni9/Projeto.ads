@@ -40,7 +40,7 @@ caixaAlerta.append(
 alertaSucesso.appendChild(caixaAlerta);
 document.body.appendChild(alertaSucesso);
 
-let elementoAnteriorAlerta;
+let elementoAnteriorAlerta = null;
 
 function fecharAlerta() {
     alertaSucesso.hidden = true;
@@ -52,20 +52,12 @@ function fecharAlerta() {
 
 function mostrarAlerta(mensagem, tipo = "sucesso") {
     elementoAnteriorAlerta = document.activeElement;
-
     textoAlerta.textContent = mensagem;
 
-    tituloAlerta.textContent =
-        tipo === "erro" ? "Não foi possível entrar" : "Sucesso!";
-
-    iconeAlerta.textContent =
-        tipo === "erro" ? "!" : "✓";
-
-    alertaSucesso.classList.toggle(
-        "alerta-erro",
-        tipo === "erro"
-    );
-
+    const erro = tipo === "erro";
+    tituloAlerta.textContent = erro ? "Não foi possível entrar" : "Sucesso!";
+    iconeAlerta.textContent = erro ? "!" : "✓";
+    alertaSucesso.classList.toggle("alerta-erro", erro);
     alertaSucesso.hidden = false;
     botaoAlerta.focus();
 }
@@ -90,10 +82,8 @@ document.addEventListener("keydown", function(event) {
 // ==========================================
 
 document.querySelectorAll(".alternar-senha").forEach(function(opcao) {
-
     function atualizarVisibilidade() {
         const tipo = opcao.checked ? "text" : "password";
-
         const campos = (opcao.dataset.campos || "")
             .trim()
             .split(/\s+/)
@@ -125,19 +115,16 @@ document.querySelectorAll(".alternar-senha").forEach(function(opcao) {
 // 3. CADASTRO
 // ==========================================
 
-const formulario = document.getElementById("formCadastro");
+const formularioCadastro = document.getElementById("formCadastro");
 
-if (formulario) {
-
-    formulario.addEventListener("submit", function(event) {
+if (formularioCadastro) {
+    formularioCadastro.addEventListener("submit", function(event) {
         event.preventDefault();
 
         const nome = document.getElementById("nome").value.trim();
         const email = document.getElementById("email").value.trim();
         const senha = document.getElementById("senha").value;
-        const confirmarSenha =
-            document.getElementById("confirmarSenha").value;
-
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
         const mensagem = document.getElementById("mensagem");
 
         if (senha !== confirmarSenha) {
@@ -169,39 +156,33 @@ if (formulario) {
 const formLogin = document.getElementById("formLogin");
 
 if (formLogin) {
-
     formLogin.addEventListener("submit", function(event) {
         event.preventDefault();
 
         const emailDigitado =
             document.getElementById("emailLogin").value.trim();
-
         const senhaDigitada =
             document.getElementById("senhaLogin").value;
-
         const emailSalvo = localStorage.getItem("email");
         const senhaSalva = localStorage.getItem("senha");
-
         const mensagem = document.getElementById("mensagemLogin");
 
-        if (
+        const loginValido =
+            emailSalvo !== null &&
             emailDigitado === emailSalvo &&
-            senhaDigitada === senhaSalva &&
-            emailSalvo !== null
-        ) {
+            senhaDigitada === senhaSalva;
+
+        if (loginValido) {
             if (mensagem) {
                 mensagem.textContent = "Login realizado com sucesso!";
                 mensagem.style.color = "green";
             }
 
             mostrarAlerta("Login realizado com sucesso!");
-
         } else {
-
             if (mensagem) {
                 mensagem.textContent =
                     "Dados incorretos ou não cadastrados.";
-
                 mensagem.style.color = "red";
             }
 
@@ -219,30 +200,22 @@ if (formLogin) {
 // ==========================================
 
 const areaLogin = document.getElementById("areaLogin");
-
 const formRecuperacaoSenha =
     document.getElementById("formRecuperacaoSenha");
 
 if (areaLogin && formRecuperacaoSenha) {
-
     const tituloFormulario =
         document.getElementById("tituloFormulario");
-
     const botaoEsqueciSenha =
         document.getElementById("botaoEsqueciSenha");
-
     const botaoVoltarLogin =
         document.getElementById("botaoVoltarLogin");
-
     const campoEmailRecuperacao =
         document.getElementById("emailRecuperacao");
-
     const campoNovaSenha =
         document.getElementById("novaSenha");
-
     const campoConfirmarNovaSenha =
         document.getElementById("confirmarNovaSenha");
-
     const mensagemRecuperacao =
         document.getElementById("mensagemRecuperacao");
 
@@ -254,9 +227,7 @@ if (areaLogin && formRecuperacaoSenha) {
         campoConfirmarNovaSenha &&
         mensagemRecuperacao
     ) {
-
         botaoEsqueciSenha.addEventListener("click", function() {
-
             areaLogin.hidden = true;
             formRecuperacaoSenha.hidden = false;
 
@@ -265,15 +236,11 @@ if (areaLogin && formRecuperacaoSenha) {
             }
 
             mensagemRecuperacao.textContent = "";
-
             formRecuperacaoSenha.reset();
-
             campoEmailRecuperacao.focus();
         });
 
-
         botaoVoltarLogin.addEventListener("click", function() {
-
             formRecuperacaoSenha.hidden = true;
             areaLogin.hidden = false;
 
@@ -291,20 +258,16 @@ if (areaLogin && formRecuperacaoSenha) {
             }
         });
 
-
         formRecuperacaoSenha.addEventListener("submit", function(event) {
-
             event.preventDefault();
 
             const emailSalvo = localStorage.getItem("email");
+            const emailInformado =
+                campoEmailRecuperacao.value.trim();
 
-            if (
-                !emailSalvo ||
-                campoEmailRecuperacao.value.trim() !== emailSalvo
-            ) {
+            if (!emailSalvo || emailInformado !== emailSalvo) {
                 mensagemRecuperacao.textContent =
                     "Não encontramos um cadastro com esse email.";
-
                 mensagemRecuperacao.style.color = "red";
                 return;
             }
@@ -315,20 +278,16 @@ if (areaLogin && formRecuperacaoSenha) {
             ) {
                 mensagemRecuperacao.textContent =
                     "As senhas não coincidem.";
-
                 mensagemRecuperacao.style.color = "red";
                 return;
             }
 
             localStorage.setItem("senha", campoNovaSenha.value);
-
             mensagemRecuperacao.textContent =
                 "Senha atualizada. Volte ao login para entrar.";
-
             mensagemRecuperacao.style.color = "green";
 
             formRecuperacaoSenha.reset();
-
             mostrarAlerta("Senha atualizada com sucesso!");
         });
     }
@@ -341,37 +300,37 @@ if (areaLogin && formRecuperacaoSenha) {
 
 const cepInput = document.getElementById("cep");
 const telefoneInput = document.getElementById("telefone");
-
 const formContato = document.getElementById("formContato");
-
 const statusEnvio = document.getElementById("statusEnvio");
-
 const btnEnviar = document.getElementById("btnEnviar");
 
 
 // MÁSCARA DE TELEFONE
 
 if (telefoneInput) {
+    telefoneInput.addEventListener("input", function(event) {
+        let valor = event.target.value
+            .replace(/\D/g, "")
+            .slice(0, 11);
 
-    telefoneInput.addEventListener("input", function(e) {
-
-        let v = e.target.value.replace(/\D/g, "").slice(0, 11);
-
-        if (v.length > 10) {
-            v = v.replace(
+        if (valor.length > 10) {
+            valor = valor.replace(
                 /^(\d{2})(\d{5})(\d{4}).*/,
                 "($1) $2-$3"
             );
-        } else if (v.length > 6) {
-            v = v.replace(
+        } else if (valor.length > 6) {
+            valor = valor.replace(
                 /^(\d{2})(\d{4})(\d{0,4}).*/,
                 "($1) $2-$3"
             );
-        } else if (v.length > 2) {
-            v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
+        } else if (valor.length > 2) {
+            valor = valor.replace(
+                /^(\d{2})(\d+)/,
+                "($1) $2"
+            );
         }
 
-        e.target.value = v;
+        event.target.value = valor;
     });
 }
 
@@ -379,14 +338,14 @@ if (telefoneInput) {
 // MÁSCARA E CONSULTA DE CEP
 
 if (cepInput) {
-
     let consultaAtual = 0;
 
-    cepInput.addEventListener("input", async function(e) {
+    cepInput.addEventListener("input", async function(event) {
+        const cep = event.target.value
+            .replace(/\D/g, "")
+            .slice(0, 8);
 
-        let cep = e.target.value.replace(/\D/g, "").slice(0, 8);
-
-        e.target.value = cep.length > 5
+        event.target.value = cep.length > 5
             ? cep.replace(/^(\d{5})(\d)/, "$1-$2")
             : cep;
 
@@ -399,7 +358,7 @@ if (cepInput) {
             return;
         }
 
-        consultaAtual++;
+        consultaAtual += 1;
         const numeroConsulta = consultaAtual;
 
         if (cep.length < 8) {
@@ -410,7 +369,6 @@ if (cepInput) {
         }
 
         try {
-
             campoCidade.value = "Buscando...";
             campoRua.value = "";
             campoBairro.value = "";
@@ -425,24 +383,21 @@ if (cepInput) {
 
             const data = await response.json();
 
-            // Impede uma consulta antiga de sobrescrever a mais recente
             if (numeroConsulta !== consultaAtual) {
                 return;
             }
 
             if (data.erro) {
-
                 campoCidade.value = "";
                 campoRua.value = "";
                 campoBairro.value = "";
-
                 alert("CEP não encontrado!");
                 return;
             }
 
             campoCidade.value =
-                `${data.localidade} - ${data.uf}`;
-
+                `${data.localidade || ""} - ${data.uf || ""}`
+                    .replace(/ - $/, "");
             campoRua.value = data.logradouro || "";
             campoBairro.value = data.bairro || "";
 
@@ -452,63 +407,102 @@ if (cepInput) {
             if (campoNumero) {
                 campoNumero.focus();
             }
-
         } catch (error) {
-
             if (numeroConsulta !== consultaAtual) {
                 return;
             }
 
             console.error("Erro na API ViaCEP:", error);
-
             campoCidade.value = "";
             campoRua.value = "";
             campoBairro.value = "";
-
-            alert("Não foi possível consultar o CEP. Verifique sua conexão.");
+            alert(
+                "Não foi possível consultar o CEP. Verifique sua conexão."
+            );
         }
     });
 }
 
 
 // ==========================================
-// 7. ENVIO DO FORMULÁRIO DE CONTATO
+// 7. ENVIO E ARMAZENAMENTO DOS CONTATOS
 // ==========================================
 
 if (formContato) {
-
     const ENDPOINT_API =
         "https://formsubmit.co/ajax/projetoadsuni9@gmail.com";
 
-    formContato.addEventListener("submit", async function(e) {
-
-        e.preventDefault();
+    formContato.addEventListener("submit", async function(event) {
+        event.preventDefault();
 
         if (!btnEnviar || !statusEnvio) {
-            console.error("Verifique os IDs btnEnviar e statusEnvio no HTML.");
+            console.error(
+                "Verifique os IDs btnEnviar e statusEnvio no HTML."
+            );
             return;
         }
 
         btnEnviar.disabled = true;
         btnEnviar.textContent = "Enviando...";
-
         statusEnvio.className = "status-envio";
         statusEnvio.style.display = "none";
 
-        const formData = new FormData(formContato);
-        const dados = Object.fromEntries(formData.entries());
+        const contato = {
+            nome: document.getElementById("nome").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            telefone:
+                document.getElementById("telefone").value.trim(),
+            cep: document.getElementById("cep").value.trim(),
+            cidade: document.getElementById("cidade").value.trim(),
+            rua: document.getElementById("rua").value.trim(),
+            numero: document.getElementById("numero").value.trim(),
+            bairro: document.getElementById("bairro").value.trim(),
+            assunto: document.getElementById("assunto").value,
+            mensagem:
+                document.getElementById("mensagem").value.trim(),
+            dataEnvio: new Date().toLocaleString("pt-BR")
+        };
+
+        let contatoArmazenado = false;
 
         try {
+            let contatos = [];
+
+            const contatosSalvos =
+                localStorage.getItem("contatos");
+
+            if (contatosSalvos) {
+                try {
+                    contatos = JSON.parse(contatosSalvos);
+
+                    if (!Array.isArray(contatos)) {
+                        contatos = [];
+                    }
+                } catch (error) {
+                    contatos = [];
+                }
+            }
+
+            contatos.push(contato);
+            localStorage.setItem(
+                "contatos",
+                JSON.stringify(contatos)
+            );
+            contatoArmazenado = true;
+        } catch (error) {
+            console.error("Erro ao armazenar contato:", error);
+        }
+
+        try {
+            const formData = new FormData(formContato);
+            const dados = Object.fromEntries(formData.entries());
 
             const response = await fetch(ENDPOINT_API, {
-
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
-
                 body: JSON.stringify(dados)
             });
 
@@ -525,103 +519,24 @@ if (formContato) {
                 throw new Error("Falha no envio");
             }
 
-            statusEnvio.textContent =
-                "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
-
+            statusEnvio.textContent = contatoArmazenado
+                ? "Mensagem enviada e armazenada com sucesso!"
+                : "Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.";
             statusEnvio.classList.add("sucesso");
             statusEnvio.style.display = "block";
 
             formContato.reset();
-
         } catch (error) {
+            console.error("Erro ao enviar contato:", error);
 
-  
-// ==========================================
-// 7. ENVIO E ARMAZENAMENTO DOS CONTATOS
-// ==========================================
-
-if (formContato) {
-
-    formContato.addEventListener("submit", function(e) {
-
-        e.preventDefault();
-
-        if (!btnEnviar || !statusEnvio) {
-            console.error("Verifique os IDs btnEnviar e statusEnvio no HTML.");
-            return;
-        }
-
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = "Salvando...";
-
-        statusEnvio.className = "status-envio";
-        statusEnvio.style.display = "none";
-
-        try {
-
-            // Captura os dados preenchidos no formulário
-            const contato = {
-                nome: document.getElementById("nome").value.trim(),
-                email: document.getElementById("email").value.trim(),
-                telefone: document.getElementById("telefone").value.trim(),
-                cep: document.getElementById("cep").value.trim(),
-                cidade: document.getElementById("cidade").value.trim(),
-                rua: document.getElementById("rua").value.trim(),
-                numero: document.getElementById("numero").value.trim(),
-                bairro: document.getElementById("bairro").value.trim(),
-                assunto: document.getElementById("assunto").value,
-                mensagem: document.getElementById("mensagem").value.trim(),
-                dataEnvio: new Date().toLocaleString("pt-BR")
-            };
-
-            // Recupera os contatos já armazenados
-            let contatos = JSON.parse(
-                localStorage.getItem("contatos")
-            ) || [];
-
-            // Adiciona o novo contato
-            contatos.push(contato);
-
-            // Salva todos os contatos no navegador
-            localStorage.setItem(
-                "contatos",
-                JSON.stringify(contatos)
-            );
-
-            // Exibe mensagem de sucesso
-            statusEnvio.textContent =
-                "Mensagem enviada e armazenada com sucesso!";
-
-            statusEnvio.classList.add("sucesso");
-            statusEnvio.style.display = "block";
-
-            mostrarAlerta(
-                "Seu contato foi armazenado com sucesso!"
-            );
-
-            // Limpa os campos
-            formContato.reset();
-
-        } catch (error) {
-
-            console.error("Erro ao armazenar contato:", error);
-
-            statusEnvio.textContent =
-                "Não foi possível armazenar sua mensagem. Tente novamente.";
-
+            statusEnvio.textContent = contatoArmazenado
+                ? "Sua mensagem foi armazenada, mas não pôde ser enviada. Tente novamente."
+                : "Não foi possível enviar sua mensagem. Tente novamente.";
             statusEnvio.classList.add("erro");
             statusEnvio.style.display = "block";
-
-            mostrarAlerta(
-                "Não foi possível salvar seu contato.",
-                "erro"
-            );
-
         } finally {
-
             btnEnviar.disabled = false;
             btnEnviar.textContent = "Enviar Mensagem";
-
         }
     });
 }
